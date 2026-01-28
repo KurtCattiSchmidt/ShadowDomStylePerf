@@ -15,12 +15,16 @@
         });
 
         const observer = new PerformanceObserver((list) => {
-            const entries = list.getEntries();
-            const lastEntry = entries[entries.length - 1]; // Use the latest LCP candidate
-            console.log("LCP:", lastEntry.startTime);
-            console.log(lastEntry);
+            list.getEntries().forEach((entry) => {
+                if (entry.entryType === "largest-contentful-paint") {
+                    console.log("LCP:", entry.startTime);
+                } else if (entry.name === "first-contentful-paint") {
+                    console.log("FCP:", entry.startTime);
+                }
+                console.log(entry);
+            });
         });
-        observer.observe({ type: "largest-contentful-paint", buffered: true });
+        observer.observe({ entryTypes: ["largest-contentful-paint", "paint"] });
     </script>
     </head>
   <body>
@@ -40,7 +44,7 @@
                 }
             });
             var endTime = performance.now();
-            console.log("Time to add CSS rule: " + (endTime - startTime) + " milliseconds");
+            console.log("Time taken to update stylesheets: " + (endTime - startTime) + " milliseconds");
         });
       </script>
       <style>
