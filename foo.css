@@ -1,0 +1,1 @@
+p {color: blue; width: 150px; height: 50px;  }  * {font-family: sans-serif;} :host { display: flex; width:150px; height: 150px; background: gray; border: 1px solid black; align-items: center; }
