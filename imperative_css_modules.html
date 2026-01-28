@@ -2,7 +2,25 @@
 <html>
     <head>
     <script type="module">
-        var start = performance.now();
+        window.start = performance.now();
+
+        window.addEventListener('load', function() {
+            const end = performance.now();
+            console.log('Time to onload: ' + (end - window.start) + ' milliseconds');
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const end = performance.now();
+            console.log('Time to DOMContentLoaded: ' + (end - window.start) + ' milliseconds');
+        });
+
+        const observer = new PerformanceObserver((list) => {
+            const entries = list.getEntries();
+            const lastEntry = entries[entries.length - 1]; // Use the latest LCP candidate
+            console.log("LCP:", lastEntry.startTime);
+            console.log(lastEntry);
+        });
+        observer.observe({ type: "largest-contentful-paint", buffered: true });
         
         import sheet from "./foo.css" with { type: "css" };
         import large_sheet from "./large.css" with { type: "css" };
@@ -1071,6 +1089,9 @@
         <styles-test-element></styles-test-element>
         <styles-test-element></styles-test-element>
     </div>
+    <script type="module">
+        const end = performance.now();
+        console.log("Time taken to parse: " + (end - window.start) + " milliseconds");
+    </script>
 </body>
-
 </html>

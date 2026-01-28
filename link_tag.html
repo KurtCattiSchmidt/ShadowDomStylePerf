@@ -1,6 +1,29 @@
 <!doctype html>
 <html>
-  <body onload="logLoad()">
+    <head>
+    <script>
+        const start = performance.now();
+
+        window.addEventListener('load', function() {
+            const end = performance.now();
+            console.log('Time to onload: ' + (end - start) + ' milliseconds');
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const end = performance.now();
+            console.log('Time to DOMContentLoaded: ' + (end - start) + ' milliseconds');
+        });
+
+        const observer = new PerformanceObserver((list) => {
+            const entries = list.getEntries();
+            const lastEntry = entries[entries.length - 1]; // Use the latest LCP candidate
+            console.log("LCP:", lastEntry.startTime);
+            console.log(lastEntry);
+        });
+        observer.observe({ type: "largest-contentful-paint", buffered: true });
+    </script>
+    </head>
+  <body>
       <button id="addCssRule">Add Rules</button>
       <script>
         document.getElementById('addCssRule').addEventListener('click', function() {
@@ -27,14 +50,6 @@
             width: 100vw;
         }
     </style>
-    <script>
-        var start = performance.now();
-
-        function logLoad() {
-            var end = performance.now();
-            console.log('Time to onload: ' + (end - start) + ' milliseconds');
-        }
-    </script>
     <div class="wrapper">
         <!-- Start -->
         <div><template shadowrootmode="open"><link rel="stylesheet" href="foo.css"><link rel="stylesheet" href="large.css"><p>Here is <span>some</span> text</p></template></div>
@@ -1065,6 +1080,6 @@
         <div><template shadowrootmode="open"><link rel="stylesheet" href="foo.css"><link rel="stylesheet" href="large.css"><p>Here is <span>some</span> text</p></template></div>
 
     <script>
-        var end = performance.now();
-        console.log("Time taken: " + (end - start) + " milliseconds");
+        const end = performance.now();
+        console.log("Time taken to parse: " + (end - start) + " milliseconds");
     </script>
