@@ -4,16 +4,136 @@
         <style>
             body {
                 font-family: Arial, sans-serif;
+                width: 800px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            table, th, td {
+                border: 1px solid;
+            }
+            .best {
+                background-color: lightgreen;
             }
         </style>
     </head>
     <body>
         <h1>Shadow DOM Style Sharing Performance Tests</h1>
+        <h2>Test Pages</h2>
+        <p>First open the page, refresh several times to populate the cache, <b>then</b> open developer tools to see values in the console. Opening developer tools first will drastically reduce performance.</p>
         <ul>
             <li><a href="declarative_css_modules_attribute.html">Declarative CSS Modules Test</a></li>
             <li><a href="imperative_css_modules.html">Imperative CSS Modules Test</a></li>
             <li><a href="inline_styles.html">Inline Styles Test</a></li>
             <li><a href="link_tag.html">Link Tag CSS Modules Test</a></li>
         </ul>
+
+        <h2>Performance Test Results</h2>
+        <h4>Chrome 144.0.7559.110</h4>
+        <table>
+            <tr>
+                <th>Test Name</th>
+                <th>Duplicated Inline Styles</th>
+                <th>Duplicated Link Tags</th>
+                <th>Imperative CSS Modules</th>
+                <th>Declarative CSS Modules (experimental)</th>
+            </tr>
+            <tr>
+                <td>Parsing</td>
+                <td>214 milliseconds</td>
+                <td>67 milliseconds</td>
+                <td>49 milliseconds</td>
+                <td class="best">19 milliseconds</td>
+            </tr>
+            <tr>
+                <td>DOMContentLoaded</td>
+                <td>214 milliseconds</td>
+                <td>68 milliseconds</td>
+                <td>49 milliseconds</td>
+                <td class="best">19 milliseconds</td>
+            </tr>
+            <tr>
+                <td>onload</td>
+                <td>223 milliseconds</td>
+                <td>76 milliseconds</td>
+                <td>52 milliseconds</td>
+                <td class="best">51 milliseconds</td>
+            </tr>
+            <tr>
+                <td>FCP</td>
+                <td class="best">60 milliseconds</td>
+                <td>76 milliseconds</td>
+                <td>80 milliseconds</td>
+                <td>76 milliseconds</td>
+            </tr>
+            <tr>
+                <td>Update Stylesheet</td>
+                <td>37 milliseconds</td>
+                <td>28 milliseconds</td>
+                <td class="best">2 milliseconds</td>
+                <td class="best">2 milliseconds</td>
+            </tr>
+            <tr>
+                <td>Memory Footprint</td>
+                <td>166mb</td>
+                <td>113mb</td>
+                <td>51mb</td>
+                <td class="best">47mb</td>
+            </tr>
+        </table>
+
+        <h4>Firefox 147.0.1 </h4>
+        <table>
+            <tr>
+                <th>Test Name</th>
+                <th>Duplicated Inline Styles</th>
+                <th>Duplicated Link Tags</th>
+                <th>Imperative CSS Modules</th>
+                <th>Declarative CSS Modules (experimental)</th>
+            </tr>
+            <tr>
+                <td>Parsing</td>
+                <td>173 milliseconds</td>
+                <td>102 milliseconds</td>
+                <td class="best">7 milliseconds</td>
+                <td>N/A</td>
+            </tr>
+            <tr>
+                <td>DOMContentLoaded</td>
+                <td>175 milliseconds</td>
+                <td>103 milliseconds</td>
+                <td class="best">35 milliseconds</td>
+                <td>N/A</td>
+            </tr>
+            <tr>
+                <td>onload</td>
+                <td>182 milliseconds</td>
+                <td>104 milliseconds</td>
+                <td class="best">36 milliseconds</td>
+                <td>N/A</td>
+            </tr>
+            <tr>
+                <td>FCP*</td>
+                <td>57 milliseconds</td>
+                <td>126 milliseconds</td>
+                <td>N/A* milliseconds</td>
+                <td>N/A</td>
+            </tr>
+            <tr>
+                <td>Update Stylesheet</td>
+                <td>119 milliseconds</td>
+                <td>126 milliseconds</td>
+                <td class="best">1 milliseconds</td>
+                <td>N/A</td>
+            </tr>
+            <tr>
+                <td>Memory Footprint</td>
+                <td>423mb</td>
+                <td>248mb</td>
+                <td class="best">65mb</td>
+                <td>N/A</td>
+            </tr>
+        </table>
+        <p>* FCP measurement for Imperative CSS Modules in Firefox is not logged in this specific scenario, could be a bug.</p>
     </body>
 </html>

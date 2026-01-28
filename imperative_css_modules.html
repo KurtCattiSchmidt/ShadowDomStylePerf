@@ -21,7 +21,6 @@
                 } else if (entry.name === "first-contentful-paint") {
                     console.log("FCP:", entry.startTime);
                 }
-                console.log(entry);
             });
         });
         observer.observe({ entryTypes: ["largest-contentful-paint", "paint"] });
@@ -42,6 +41,7 @@
         customElements.define('styles-test-element', CSSModuleTestElement);
     </script>
     <style>
+        body { font-family: sans-serif; }
         .wrapper {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -50,7 +50,7 @@
     </style>
     </head>
 <body>
-    <button id="addCssRule">Add Rules</button>
+    <button id="addCssRule">Add Rules</button><span>Directions: Wait for the page to load, click the button, then open Developer Tools and view the console.</span>
     <script>
         document.getElementById('addCssRule').addEventListener('click', function() {
             const startTime = performance.now();
