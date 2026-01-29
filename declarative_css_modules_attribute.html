@@ -4,23 +4,16 @@
     <script>
         const start = performance.now();
 
-        window.addEventListener('load', function() {
-            const end = performance.now();
-            console.log('Time to onload: ' + (end - start) + ' milliseconds');
-        });
-
         document.addEventListener('DOMContentLoaded', function() {
-            const end = performance.now();
-            console.log('Time to DOMContentLoaded: ' + (end - start) + ' milliseconds');
+            window._domContentLoadedTime = performance.now() - start;
         });
 
         const observer = new PerformanceObserver((list) => {
             list.getEntries().forEach((entry) => {
                 if (entry.entryType === "largest-contentful-paint") {
-                    console.log("LCP:", entry.startTime);
                     window._lcpTime = entry.startTime;
                 } else if (entry.name === "first-contentful-paint") {
-                    console.log("FCP:", entry.startTime);
+                    window._fcpTime = entry.startTime;
                 }
             });
         });
@@ -83,46 +76,52 @@
 
         // Collect current metrics after load
         window.addEventListener('load', function() {
-            const end = performance.now();
-            const onloadTime = end - start;
-            data.onload.push(onloadTime);
+            function collectMetricsAndContinue() {
+                const end = performance.now();
+                const onloadTime = end - start;
+                data.onload.push(onloadTime);
 
-            // Get DOMContentLoaded (already fired, use stored value)
-            if (window._domContentLoadedTime) {
-                data.domContentLoaded.push(window._domContentLoadedTime);
-            }
-
-            // Get paint entries
-            const paintEntries = performance.getEntriesByType('paint');
-            paintEntries.forEach(entry => {
-                if (entry.name === 'first-contentful-paint') {
-                    data.fcp.push(entry.startTime);
+                // Get DOMContentLoaded (already fired, use stored value)
+                if (window._domContentLoadedTime) {
+                    data.domContentLoaded.push(window._domContentLoadedTime);
                 }
-            });
 
-            // Get LCP (stored from PerformanceObserver)
-            if (window._lcpTime) {
-                data.lcp.push(window._lcpTime);
+                // Get FCP (stored from PerformanceObserver)
+                if (window._fcpTime) {
+                    data.fcp.push(window._fcpTime);
+                }
+
+                // Get LCP (stored from PerformanceObserver)
+                if (window._lcpTime) {
+                    data.lcp.push(window._lcpTime);
+                }
+
+                // Call addRedCssRule and measure time
+                const cssRuleStart = performance.now();
+                addRedCssRule();
+                const cssRuleTime = performance.now() - cssRuleStart;
+                data.addCssRule.push(cssRuleTime);
+
+                count++;
+                localStorage.setItem(RELOAD_COUNT_KEY, count.toString());
+                localStorage.setItem(RELOAD_KEY, JSON.stringify(data));
+
+                if (count < RELOAD_MAX) {
+                    // Continue reloading
+                    setTimeout(() => window.location.reload(), 100);
+                } else {
+                    // Done - calculate and display averages
+                    displayAverages(data);
+                    localStorage.removeItem(RELOAD_COUNT_KEY);
+                    localStorage.removeItem(RELOAD_KEY);
+                }
             }
 
-            // Call addRedCssRule and measure time
-            const cssRuleStart = performance.now();
-            addRedCssRule();
-            const cssRuleTime = performance.now() - cssRuleStart;
-            data.addCssRule.push(cssRuleTime);
-
-            count++;
-            localStorage.setItem(RELOAD_COUNT_KEY, count.toString());
-            localStorage.setItem(RELOAD_KEY, JSON.stringify(data));
-
-            if (count < RELOAD_MAX) {
-                // Continue reloading
-                setTimeout(() => window.location.reload(), 100);
+            // If FCP not yet available, wait for next frame
+            if (!window._fcpTime) {
+                requestAnimationFrame(collectMetricsAndContinue);
             } else {
-                // Done - calculate and display averages
-                displayAverages(data);
-                localStorage.removeItem(RELOAD_COUNT_KEY);
-                localStorage.removeItem(RELOAD_KEY);
+                collectMetricsAndContinue();
             }
         });
     }
@@ -144,11 +143,6 @@
         }
     }
 
-    // Store DOMContentLoaded time for later use
-    document.addEventListener('DOMContentLoaded', function() {
-        window._domContentLoadedTime = performance.now() - start;
-    });
-
     // Check if we're in a reload cycle
     checkAndContinueReload();
 
@@ -162,7 +156,6 @@
 
             const endTime = performance.now();
             const timeTaken = endTime - startTime;
-            console.log('Time taken to update stylesheets: ' + timeTaken + ' milliseconds');
         });
     }
     </script>
