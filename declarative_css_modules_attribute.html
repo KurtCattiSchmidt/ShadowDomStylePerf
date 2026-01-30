@@ -8,16 +8,22 @@
             window._domContentLoadedTime = performance.now() - start;
         });
 
-        const observer = new PerformanceObserver((list) => {
-            list.getEntries().forEach((entry) => {
-                if (entry.entryType === "largest-contentful-paint") {
-                    window._lcpTime = entry.startTime;
-                } else if (entry.name === "first-contentful-paint") {
-                    window._fcpTime = entry.startTime;
-                }
+        function setupPerformanceObserver() {
+            if (window._performanceObserverSetup) return;
+            window._performanceObserverSetup = true;
+
+            const observer = new PerformanceObserver((list) => {
+                list.getEntries().forEach((entry) => {
+                    if (entry.entryType === "largest-contentful-paint") {
+                        window._lcpTime = entry.startTime;
+                    } else if (entry.name === "first-contentful-paint") {
+                        window._fcpTime = entry.startTime;
+                    }
+                });
             });
-        });
-        observer.observe({ entryTypes: ["largest-contentful-paint", "paint"] });
+            observer.observe({ entryTypes: ["largest-contentful-paint", "paint"] });
+        }
+        setupPerformanceObserver();
     </script>
     <style>
         body { font-family: sans-serif; }
