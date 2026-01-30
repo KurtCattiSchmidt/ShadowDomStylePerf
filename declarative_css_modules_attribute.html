@@ -39,7 +39,7 @@
 <body>
     <!-- <button id="addCssRule" onclick="addRedCssRule()">Add Rules</button> -->
     <button id="reload100" onclick="startReload100()">Reload 100 times</button>
-    <span id="reloadStatus">Directions: <strong>Close developer tools if open, </strong> maximize the window, click the "Reload 100 times" button, wait for it to finish, <strong>then</strong> open Developer Tools and view the console.</span>
+    <span id="reloadStatus">Directions: <strong>Close developer tools if open and refresh, </strong> maximize the window, click the "Reload 100 times" button, wait for it to finish, <strong>then</strong> open Developer Tools and view the console.</span>
 
     <script>
     // Reload 100 times functionality
@@ -150,15 +150,10 @@
     checkAndContinueReload();
 
     function addRedCssRule() {
-        const startTime = performance.now();
-
         import("foo", { with: { type: "css" } }).then((sheet) => {
             sheet.default.insertRule('p { color: red; }', sheet.default.cssRules.length);
             sheet.default.insertRule('p { background-image: linear-gradient(135deg,#4f46e5,#06b6d4); }', sheet.default.cssRules.length);
             sheet.default.insertRule('p span { font-weight: bold; }', sheet.default.cssRules.length);
-
-            const endTime = performance.now();
-            const timeTaken = endTime - startTime;
         });
     }
     </script>

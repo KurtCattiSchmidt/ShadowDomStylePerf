@@ -24,7 +24,7 @@
       <!-- <button id="addCssRule" onclick="addRedCssRule()">Add Rules</button> -->
       <button id="reload100" onclick="startReload100()">Reload 100 times</button>
       <span id="reloadStatus"></span>
-    <span id="reloadStatus">Directions: <strong>Close developer tools if open, </strong> maximize the window, click the "Reload 100 times" button, wait for it to finish, <strong>then</strong> open Developer Tools and view the console.</span>
+    <span id="reloadStatus">Directions: <strong>Close developer tools if open and refresh, </strong> maximize the window, click the "Reload 100 times" button, wait for it to finish, <strong>then</strong> open Developer Tools and view the console.</span>
       <script>
     // Reload 100 times functionality
     const RELOAD_KEY = 'reload100_data';
@@ -134,7 +134,6 @@
     checkAndContinueReload();
 
     function addRedCssRule() {
-        var startTime = performance.now();
         var divs = document.querySelectorAll('div');
         divs.forEach(function(div) {
             if (div.shadowRoot) {
@@ -146,7 +145,6 @@
                 }
             }
         });
-        var endTime = performance.now();
     }
       </script>
       <style>
