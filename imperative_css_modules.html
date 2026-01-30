@@ -47,7 +47,7 @@
     <!-- <button id="addCssRule" onclick="addRedCssRule()">Add Rules</button> -->
     <button id="reload100" onclick="startReload100()">Reload 100 times</button>
     <span id="reloadStatus"></span>
-    <span>Directions: Wait for the page to load, click the "Reload 100 times" button, wait for it to finish, <strong>then</strong> open Developer Tools and view the console.</span>
+    <span id="reloadStatus">Directions: <strong>Close developer tools if open, </strong> maximize the window, click the "Reload 100 times" button, wait for it to finish, <strong>then</strong> open Developer Tools and view the console.</span>
     <script>
     // Reload 100 times functionality
     const RELOAD_KEY = 'reload100_data';
@@ -149,7 +149,7 @@
 
         const statusEl = document.getElementById('reloadStatus');
         if (statusEl) {
-            statusEl.innerHTML = `<strong>Done!</strong> Avg onload: ${avg(data.onload).toFixed(2)}ms, DOMContentLoaded: ${avg(data.domContentLoaded).toFixed(2)}ms, FCP: ${avg(data.fcp).toFixed(2)}ms, LCP: ${avg(data.lcp).toFixed(2)}ms, addCssRule: ${avg(data.addCssRule).toFixed(2)}ms`;
+            statusEl.innerHTML = `<strong>Done!</strong> Now open the developer tools console to see average results.`;
         }
     }
 
