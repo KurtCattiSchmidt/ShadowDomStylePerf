@@ -124,12 +124,15 @@
                 }
             }
 
-            // If FCP not yet available, wait for next frame
-            if (!window._fcpTime) {
-                requestAnimationFrame(collectMetricsAndContinue);
-            } else {
-                collectMetricsAndContinue();
+            // Wait for both FCP and LCP to be available
+            function waitForMetrics() {
+                if (!window._fcpTime || !window._lcpTime) {
+                    requestAnimationFrame(waitForMetrics);
+                } else {
+                    collectMetricsAndContinue();
+                }
             }
+            waitForMetrics();
         });
     }
 
