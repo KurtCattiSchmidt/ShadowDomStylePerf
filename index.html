@@ -39,39 +39,32 @@
                 <th>Declarative CSS Modules (experimental)</th>
             </tr>
             <tr>
-                <td>Parsing</td>
-                <td>214 milliseconds</td>
-                <td>67 milliseconds</td>
-                <td>49 milliseconds</td>
-                <td class="best">19 milliseconds</td>
-            </tr>
-            <tr>
                 <td>DOMContentLoaded</td>
-                <td>214 milliseconds</td>
-                <td>68 milliseconds</td>
-                <td>49 milliseconds</td>
-                <td class="best">19 milliseconds</td>
+                <td>299 milliseconds</td>
+                <td>72 milliseconds</td>
+                <td>37 milliseconds</td>
+                <td class="best">24 milliseconds</td>
             </tr>
             <tr>
                 <td>onload</td>
-                <td>223 milliseconds</td>
-                <td>76 milliseconds</td>
-                <td>52 milliseconds</td>
-                <td class="best">51 milliseconds</td>
+                <td>314 milliseconds</td>
+                <td>86 milliseconds</td>
+                <td class="best">85 milliseconds</td>
+                <td>93 milliseconds</td>
             </tr>
             <tr>
                 <td>FCP</td>
-                <td class="best">60 milliseconds</td>
-                <td>76 milliseconds</td>
-                <td>80 milliseconds</td>
-                <td>76 milliseconds</td>
+                <td>195 milliseconds</td>
+                <td>104 milliseconds</td>
+                <td>161 milliseconds</td>
+                <td class="best">88 milliseconds</td>
             </tr>
             <tr>
                 <td>Update Stylesheet</td>
-                <td>37 milliseconds</td>
-                <td>28 milliseconds</td>
-                <td class="best">2 milliseconds</td>
-                <td class="best">2 milliseconds</td>
+                <td>54 milliseconds</td>
+                <td>29 milliseconds</td>
+                <td class="best">1 milliseconds</td>
+                <td class="best">1 milliseconds</td>
             </tr>
             <tr>
                 <td>Memory Footprint</td>
@@ -92,37 +85,30 @@
                 <th>Declarative CSS Modules (experimental)</th>
             </tr>
             <tr>
-                <td>Parsing</td>
-                <td>173 milliseconds</td>
-                <td>102 milliseconds</td>
-                <td class="best">7 milliseconds</td>
-                <td>N/A</td>
-            </tr>
-            <tr>
                 <td>DOMContentLoaded</td>
-                <td>175 milliseconds</td>
-                <td>103 milliseconds</td>
-                <td class="best">35 milliseconds</td>
+                <td>169 milliseconds</td>
+                <td>63 milliseconds</td>
+                <td class="best">51 milliseconds</td>
                 <td>N/A</td>
             </tr>
             <tr>
                 <td>onload</td>
-                <td>182 milliseconds</td>
-                <td>104 milliseconds</td>
-                <td class="best">36 milliseconds</td>
+                <td>175 milliseconds</td>
+                <td>77 milliseconds</td>
+                <td class="best">61 milliseconds</td>
                 <td>N/A</td>
             </tr>
             <tr>
-                <td>FCP*</td>
+                <td>FCP</td>
                 <td>57 milliseconds</td>
-                <td>126 milliseconds</td>
-                <td>N/A* milliseconds</td>
+                <td>87 milliseconds</td>
+                <td class="best">43 milliseconds</td>
                 <td>N/A</td>
             </tr>
             <tr>
                 <td>Update Stylesheet</td>
-                <td>119 milliseconds</td>
-                <td>126 milliseconds</td>
+                <td>127 milliseconds</td>
+                <td>115 milliseconds</td>
                 <td class="best">1 milliseconds</td>
                 <td>N/A</td>
             </tr>
@@ -134,10 +120,8 @@
                 <td>N/A</td>
             </tr>
         </table>
-        <p>* FCP measurement for Imperative CSS Modules in Firefox is not logged in this specific scenario, could be a bug.</p>
-
         <h2>Notes</h2>
         <p>Performance numbers fluctuate from run to run to some degree. These represent a reasonable average on a moderately powerful machine with a stable network connection after 100 refreshes.</p>
-        <p>"Memory Footprint" is the total used memory per tab in each browser's Task Manager. This varies depending on many factors and should only be considered an estimate.</p>
+        <p>"Memory Footprint" is the total used memory per tab in each browser's Task Manager. This varies depending on many factors and should only be considered a rough estimate.</p>
     </body>
 </html>
