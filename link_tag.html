@@ -24,6 +24,38 @@
             observer.observe({ entryTypes: ["largest-contentful-paint", "paint"] });
         }
         setupPerformanceObserver();
+
+        // Long Animation Frames (LoAF) observer
+        window._loafCount = 0;
+        window._loafEntries = [];
+        if (PerformanceObserver.supportedEntryTypes &&
+            PerformanceObserver.supportedEntryTypes.includes('long-animation-frame')) {
+            const loafObserver = new PerformanceObserver((list) => {
+                for (const entry of list.getEntries()) {
+                    window._loafCount++;
+                    window._loafEntries.push({
+                        duration: entry.duration,
+                        blockingDuration: entry.blockingDuration,
+                        startTime: entry.startTime,
+                    });
+                }
+            });
+            loafObserver.observe({ type: 'long-animation-frame', buffered: true });
+        }
+
+        // Cumulative Layout Shift (CLS) observer
+        window._clsValue = 0;
+        if (PerformanceObserver.supportedEntryTypes &&
+            PerformanceObserver.supportedEntryTypes.includes('layout-shift')) {
+            const clsObserver = new PerformanceObserver((list) => {
+                for (const entry of list.getEntries()) {
+                    if (!entry.hadRecentInput) {
+                        window._clsValue += entry.value;
+                    }
+                }
+            });
+            clsObserver.observe({ type: 'layout-shift', buffered: true });
+        }
     </script>
     </head>
   <body>
@@ -45,7 +77,10 @@
             domContentLoaded: [],
             lcp: [],
             fcp: [],
-            addCssRule: []
+            addCssRule: [],
+            loafCount: [],
+            loafTotalDuration: [],
+            cls: []
         }));
         window.location.reload();
     }
@@ -56,7 +91,7 @@
 
         let count = parseInt(countStr, 10);
         const dataStr = localStorage.getItem(RELOAD_KEY);
-        let data = dataStr ? JSON.parse(dataStr) : { onload: [], domContentLoaded: [], lcp: [], fcp: [], addCssRule: [] };
+        let data = dataStr ? JSON.parse(dataStr) : { onload: [], domContentLoaded: [], lcp: [], fcp: [], addCssRule: [], loafCount: [], loafTotalDuration: [], cls: [] };
 
         // Update status
         const statusEl = document.getElementById('reloadStatus');
@@ -91,6 +126,14 @@
                 addRedCssRule();
                 const cssRuleTime = performance.now() - cssRuleStart;
                 data.addCssRule.push(cssRuleTime);
+
+                // Collect LoAF metrics
+                data.loafCount.push(window._loafCount);
+                const loafTotalDur = window._loafEntries.reduce((sum, e) => sum + e.duration, 0);
+                data.loafTotalDuration.push(loafTotalDur);
+
+                // Collect CLS metric
+                data.cls.push(window._clsValue);
 
                 count++;
                 localStorage.setItem(RELOAD_COUNT_KEY, count.toString());
@@ -128,6 +171,11 @@
         console.log('Average FCP: ' + avg(data.fcp).toFixed(2) + ' ms');
         console.log('Average LCP: ' + avg(data.lcp).toFixed(2) + ' ms');
         console.log('Average insertRule: ' + avg(data.addCssRule).toFixed(2) + ' ms');
+        const totalLoafs = data.loafCount.reduce((a, b) => a + b, 0);
+        console.log('Total LoAF events across all runs: ' + totalLoafs);
+        console.log('Average LoAF count per run: ' + avg(data.loafCount).toFixed(2));
+        console.log('Average LoAF total duration per run: ' + avg(data.loafTotalDuration).toFixed(2) + ' ms');
+        console.log('Average CLS: ' + avg(data.cls).toFixed(4));
         console.log('Raw data:', data);
 
         const statusEl = document.getElementById('reloadStatus');
