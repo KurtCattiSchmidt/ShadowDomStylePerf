@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Declarative Shadow DOM with Preloaded Styles</title>
+    <link rel="preload" href="foo.css" as="style">
+    <link rel="preload" href="large.css" as="style">
+</head>
+<body>
+    <div>
+        <template shadowrootmode="open">
+            <link rel="stylesheet" href="foo.css">
+            <link rel="stylesheet" href="large.css">
+            <p>Here is <span>some</span> text inside declarative Shadow DOM.</p>
+        </template>
+    </div>
+</body>
+</html>
